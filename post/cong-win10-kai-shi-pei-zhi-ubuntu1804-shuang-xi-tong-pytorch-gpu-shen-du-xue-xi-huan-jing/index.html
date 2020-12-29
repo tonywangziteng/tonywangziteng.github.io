@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+     <meta charset="utf-8" />
+  <title>从win10开始配置ubuntu18.04双系统+pytorch-gpu深度学习环境 | Haymax Notebook</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+  <link rel="stylesheet" href="https://tonywangziteng.github.io/styles/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+   <script src="https://cdn.staticfile.org/highlight.js/9.15.9/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+ </head>
+ <body>
+     <div class="sidebar animated fadeInDown">
+   <div class="logo-title">
+    <div class="title">
+     <img src="https://tonywangziteng.github.io/images/avatar.png?v=1609249252263" style="width:127px;" />
+
+     <div class="description">
+      <p>温故而知新</p>
+     </div>
+    </div>
+   </div>
+   <ul class="social-links">
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+   </ul>
+   <div class="footer">
+    <div class="by_farbox">
+   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    
+
+    </div>
+   </div>
+  </div>
+  <div class="main">
+     <div class="page-top animated fadeInDown">
+    <div class="nav">
+    
+     <li><a  href="/">首页</a></li>
+
+     <li><a  href="/archives">归档</a></li>
+
+     <li><a  href="/tags">标签</a></li>
+
+     <li><a  href="/post/about">关于</a></li>
+
+    </div>
+    <div class="information">
+     <div class="back_btn">
+      <li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li>
+     </div>
+    </div>
+   </div>
+   <div class="autopagerize_page_element">
+    <div class="content">
+     <div class="post-page">
+      <div class="post animated fadeInDown">
+       <div class="post-title">
+        <h3><a>从win10开始配置ubuntu18.04双系统+pytorch-gpu深度学习环境</a></h3>
+       </div>
+       <div class="post-content">
+        <p>Author: 王子腾<br>
+<strong>本文整理了从win10开始配置ubuntu18.04双系统，以及Anaconda+Pytorch-gpu环境。本着不重复造轮子的原则，仅引用梳理优秀的现有教程</strong></p>
+<h2 id="总体步骤">总体步骤</h2>
+<ol>
+<li>安装双系统</li>
+<li>更改显卡驱动</li>
+<li>安装anaconda</li>
+<li>安装pytorch</li>
+<li>安装vscode</li>
+</ol>
+<h2 id="安装双系统">安装双系统</h2>
+<p>本文作于2020.09，ubuntu最新版本为20.04，但是由于很多应用没有适配，更加推荐18.04版本。<br>
+推荐教程：</p>
+<p><a href="https://www.cnblogs.com/masbay/p/11627727.html">ubuntu18,04双系统安装教程</a></p>
+<p>需要注意的是，制作系统盘和安装过程，大同小异，但是U盘启动的步骤，不同品牌不同型号的电脑都有差异，请自行百度。</p>
+<h2 id="安装独立显卡驱动-和-cuda">安装独立显卡驱动 和 cuda</h2>
+<p>一般pytorch需要独立显卡加速，当然如果只安装cpu版本，就不用了。<br>
+选择18.04版本的原因，其中之一就是平台本身提供稳定的先打驱动，安装简单，具体安装步骤，请参考该知乎回答的第一种即可：<br>
+<a href="https://zhuanlan.zhihu.com/p/59618999">ubuntu18.04安装nvidia独立显卡驱动</a></p>
+<p>GPU加速还需要nvidia的cuda支持，可以直接从官网安装。目前推荐10.2版本，链接如下，安装直接跟着页面上的教程即可<br>
+<a href="https://developer.nvidia.com/cuda-10.2-download-archive?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu">cuda10.2下载安装</a></p>
+<p>安装之后，在terminal中输入<code>nvidia-smi</code> 可以查看当前的显卡使用信息</p>
+<h2 id="安装anaconda和pytorch">安装anaconda和pytorch</h2>
+<p>anaconda是一个用来管理python环境和包的软件，可以创建彼此独立的虚拟环境，推荐安装。<br>
+安装根据下面的教程即可。推荐使用清华源，国内没有梯子的话直接下载速度可能会很慢。另外就是中间提示加入环境变量最好用yes<br>
+<a href="https://blog.csdn.net/qq_15192373/article/details/81091098">安装anaconda</a><br>
+安装完成之后，打开terminal应该在命令最前面出现<code>(base)</code>，说明安装成功。<br>
+然后推荐使用虚拟环境，命令为<code>conda create -n &lt;env_name&gt; python=&lt;python version&gt;</code>，例如<code>conda create -n torch_env python=3.7</code>，完成后<code>conda activate &lt;env_name&gt;</code> 激活环境。<br>
+具体conda的使用方法参见<a href="https://www.jianshu.com/p/eaee1fadc1e9">anaconda使用教程</a><br>
+激活环境后，即可按照pytorch官网中的命令安装pytorch. 相应链接为<a href="https://www.jianshu.com/p/eaee1fadc1e9">pytorch 安装</a>，推荐使用pip安装，不出意外命令应该是<code>pip install torch torchvision</code>。</p>
+<p>但是直接安装由于GFW的原因，很可能特别慢，可以更换使用清华源进行安装。<br>
+<a href="https://mirror.tuna.tsinghua.edu.cn/help/ubuntu/">清华源官方使用方法</a></p>
+<p>安装之后，在terminal中输入python，在交互环境中<code>import torch</code> ，不报错说明pytorch安装成功，再输入<code>torch.cuda.is_available()</code>，如果输出<code>True</code>说明可以使用gpu。</p>
+<h2 id="vscode">VSCODE</h2>
+<p>编辑器推荐使用vscode，只需要再<a href="https://code.visualstudio.com/">官网</a>中下载，然后安装python插件即可。激活python插件后，在左下角可以选择python interpretor，选择相应的虚拟环境，即可享受完整的代码补全等功能。</p>
+<p>运行代码推荐直接使用terminal运行。</p>
+
+       </div>
+       <div class="post-footer">
+        <div class="meta">
+         <div class="info">
+          <i class="fa fa-sun-o"></i>
+          <span class="date">2020-09-29</span>
+          <i class="fa fa-tag"></i>
+          
+          <a class="tag" href="https://tonywangziteng.github.io/tag/Bhw3_BxM7/" title="环境配置">环境配置 </a>
+          
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="share">
+       <div class="evernote">
+        <a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a>
+       </div>
+       <div class="weibo">
+        <a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a>
+       </div>
+       <div class="twitter">
+        <a class="fa fa-twitter" href="http://twitter.com/home?status=,https://tonywangziteng.github.io/post/cong-win10-kai-shi-pei-zhi-ubuntu1804-shuang-xi-tong-pytorch-gpu-shen-du-xue-xi-huan-jing/,;"></a>
+       </div>
+      </div>
+      <div class="pagination">
+       <ul class="clearfix">
+
+        <li class="pre pagbuttons"><a class="btn" role="navigation" href="https://tonywangziteng.github.io/post/physics-101-learning-physical-object-properties-from-unlabeled-videos/" title="Physics 101: Learning Physical Object Properties from Unlabeled Videos">上一篇</a></li>
+         
+        
+        <li class="next pagbuttons"><a class="btn" role="navigation" href="https://tonywangziteng.github.io/post/pbrnet/" title=" PBRNet：Progressive Boundary Refinement Network for Temporal Action Detection">下一篇</a></li>
+        
+       </ul>
+      </div>
+        
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery.js"></script>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery-migrate-1.2.1.min.js"></script>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery.appear.js"></script>
+
+
+ </body>
+</html>

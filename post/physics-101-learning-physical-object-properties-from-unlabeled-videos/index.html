@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+     <meta charset="utf-8" />
+  <title>Physics 101: Learning Physical Object Properties from Unlabeled Videos | Haymax Notebook</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+  <link rel="stylesheet" href="https://tonywangziteng.github.io/styles/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+   <script src="https://cdn.staticfile.org/highlight.js/9.15.9/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+ </head>
+ <body>
+     <div class="sidebar animated fadeInDown">
+   <div class="logo-title">
+    <div class="title">
+     <img src="https://tonywangziteng.github.io/images/avatar.png?v=1609249252263" style="width:127px;" />
+
+     <div class="description">
+      <p>温故而知新</p>
+     </div>
+    </div>
+   </div>
+   <ul class="social-links">
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+   </ul>
+   <div class="footer">
+    <div class="by_farbox">
+   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    
+
+    </div>
+   </div>
+  </div>
+  <div class="main">
+     <div class="page-top animated fadeInDown">
+    <div class="nav">
+    
+     <li><a  href="/">首页</a></li>
+
+     <li><a  href="/archives">归档</a></li>
+
+     <li><a  href="/tags">标签</a></li>
+
+     <li><a  href="/post/about">关于</a></li>
+
+    </div>
+    <div class="information">
+     <div class="back_btn">
+      <li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li>
+     </div>
+    </div>
+   </div>
+   <div class="autopagerize_page_element">
+    <div class="content">
+     <div class="post-page">
+      <div class="post animated fadeInDown">
+       <div class="post-title">
+        <h3><a>Physics 101: Learning Physical Object Properties from Unlabeled Videos</a></h3>
+       </div>
+       <div class="post-content">
+        <p>Author: Jiajun Wu (stanford)<br>
+Main work: Studying physics parameters from unlabled videos.</p>
+<!-- more -->
+<h2 id="introduction">Introduction</h2>
+<p>The paper comes from a question that ow can a vision system acquire common sense knowledge from visual input?</p>
+<p>They believe that a basic component of common sense knowledge is to understand the physics of world. Human use these explicit or latent physics labels to understand and predict the world.</p>
+<p>There have been some research of understanding physics of vision, for example using deep learning methods.</p>
+<p>In this work, they build a deep model that can learn both latent object properties and upper-level physcal arguments by observing videos without explicit labels, only with the supervision of a physics interpreter.</p>
+<h2 id="physical-world-and-datset-physics-101">Physical world and Datset: Physics 101</h2>
+<h3 id="physical-world">physical world</h3>
+<p>In this paper, they divide all physical properties into two groups:</p>
+<ol>
+<li>intrinsic properties like volume and mass, which cannot be measured from visual input</li>
+<li>descriptive properties like velocity and distance.</li>
+</ol>
+<p>Obviously, the descriptive properties are defined by the intrinsic properties. Their goal is to build an architecture that can automatically discover those observable descriptive physical properties from unlabeled videos, and use them as supervision to further learn and infer unobservable latent physical properties.</p>
+<h3 id="dataset">Dataset</h3>
+<figure data-type="image" tabindex="1"><img src="C:/Users/tonywzt/%E5%B8%B8%E7%94%A8/%E8%BE%93%E5%87%BA/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/Physics101_dataset_1.png" alt="video clips and object in the datset" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="C:/Users/tonywzt/%E5%B8%B8%E7%94%A8/%E8%BE%93%E5%87%BA/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/Physics101_dataset_2.png" alt="scenarios in the dataset" loading="lazy"></figure>
+<p>They offer three different view-points for a trial, side, top-down, and upper-top. They use DSLR camera to record first two view-points, and Kinect to record the upper-top view. They got 4352 trials in total.</p>
+<h2 id="method">Method</h2>
+<figure data-type="image" tabindex="3"><img src="C:/Users/tonywzt/%E5%B8%B8%E7%94%A8/%E8%BE%93%E5%87%BA/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/Physics101_method.png" alt="method" loading="lazy"></figure>
+<p>As can be seen in the figure, the whole model is divided into three parts.</p>
+<ol>
+<li>Bottom part: Visual Property Discoverer</li>
+<li>Medium part: Physics Interpreter</li>
+<li>Top part: Physical World Simulator</li>
+</ol>
+<h3 id="visual-property-discoverer">Visual Property Discoverer</h3>
+<p>In this part, they get some properties that can be directly calculated from videos. They first use KLT point tracker and a general background model to locate objects inside videos. They then have a LeNet on top of the patches and predict the material and volume of the projects.</p>
+
+       </div>
+       <div class="post-footer">
+        <div class="meta">
+         <div class="info">
+          <i class="fa fa-sun-o"></i>
+          <span class="date">2020-10-23</span>
+          <i class="fa fa-tag"></i>
+          
+          <a class="tag" href="https://tonywangziteng.github.io/tag/jiuvsblRB/" title="paper reading">paper reading </a>
+          
+          <a class="tag" href="https://tonywangziteng.github.io/tag/2vRMlcpkaZ/" title="osi">osi </a>
+          
+          <a class="tag" href="https://tonywangziteng.github.io/tag/4uE0uVUPee/" title="sim2real">sim2real </a>
+          
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="share">
+       <div class="evernote">
+        <a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a>
+       </div>
+       <div class="weibo">
+        <a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a>
+       </div>
+       <div class="twitter">
+        <a class="fa fa-twitter" href="http://twitter.com/home?status=,https://tonywangziteng.github.io/post/physics-101-learning-physical-object-properties-from-unlabeled-videos/,;"></a>
+       </div>
+      </div>
+      <div class="pagination">
+       <ul class="clearfix">
+
+        
+        <li class="next pagbuttons"><a class="btn" role="navigation" href="https://tonywangziteng.github.io/post/cong-win10-kai-shi-pei-zhi-ubuntu1804-shuang-xi-tong-pytorch-gpu-shen-du-xue-xi-huan-jing/" title=" 从win10开始配置ubuntu18.04双系统+pytorch-gpu深度学习环境">下一篇</a></li>
+        
+       </ul>
+      </div>
+        
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery.js"></script>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery-migrate-1.2.1.min.js"></script>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery.appear.js"></script>
+
+
+ </body>
+</html>

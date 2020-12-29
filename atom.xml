@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://tonywangziteng.github.io</id>
+    <title>Haymax Notebook</title>
+    <updated>2020-12-29T13:40:56.337Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://tonywangziteng.github.io"/>
+    <link rel="self" href="https://tonywangziteng.github.io/atom.xml"/>
+    <subtitle>温故而知新</subtitle>
+    <logo>https://tonywangziteng.github.io/images/avatar.png</logo>
+    <icon>https://tonywangziteng.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, Haymax Notebook</rights>
+    <entry>
+        <title type="html"><![CDATA[Physics 101: Learning Physical Object Properties from Unlabeled Videos]]></title>
+        <id>https://tonywangziteng.github.io/post/physics-101-learning-physical-object-properties-from-unlabeled-videos/</id>
+        <link href="https://tonywangziteng.github.io/post/physics-101-learning-physical-object-properties-from-unlabeled-videos/">
+        </link>
+        <updated>2020-10-23T05:48:09.000Z</updated>
+        <summary type="html"><![CDATA[<p>Author: Jiajun Wu (stanford)<br>
+Main work: Studying physics parameters from unlabled videos.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Author: Jiajun Wu (stanford)<br>
+Main work: Studying physics parameters from unlabled videos.</p>
+<!-- more -->
+<h2 id="introduction">Introduction</h2>
+<p>The paper comes from a question that ow can a vision system acquire common sense knowledge from visual input?</p>
+<p>They believe that a basic component of common sense knowledge is to understand the physics of world. Human use these explicit or latent physics labels to understand and predict the world.</p>
+<p>There have been some research of understanding physics of vision, for example using deep learning methods.</p>
+<p>In this work, they build a deep model that can learn both latent object properties and upper-level physcal arguments by observing videos without explicit labels, only with the supervision of a physics interpreter.</p>
+<h2 id="physical-world-and-datset-physics-101">Physical world and Datset: Physics 101</h2>
+<h3 id="physical-world">physical world</h3>
+<p>In this paper, they divide all physical properties into two groups:</p>
+<ol>
+<li>intrinsic properties like volume and mass, which cannot be measured from visual input</li>
+<li>descriptive properties like velocity and distance.</li>
+</ol>
+<p>Obviously, the descriptive properties are defined by the intrinsic properties. Their goal is to build an architecture that can automatically discover those observable descriptive physical properties from unlabeled videos, and use them as supervision to further learn and infer unobservable latent physical properties.</p>
+<h3 id="dataset">Dataset</h3>
+<figure data-type="image" tabindex="1"><img src="C:/Users/tonywzt/%E5%B8%B8%E7%94%A8/%E8%BE%93%E5%87%BA/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/Physics101_dataset_1.png" alt="video clips and object in the datset" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="C:/Users/tonywzt/%E5%B8%B8%E7%94%A8/%E8%BE%93%E5%87%BA/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/Physics101_dataset_2.png" alt="scenarios in the dataset" loading="lazy"></figure>
+<p>They offer three different view-points for a trial, side, top-down, and upper-top. They use DSLR camera to record first two view-points, and Kinect to record the upper-top view. They got 4352 trials in total.</p>
+<h2 id="method">Method</h2>
+<figure data-type="image" tabindex="3"><img src="C:/Users/tonywzt/%E5%B8%B8%E7%94%A8/%E8%BE%93%E5%87%BA/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/Physics101_method.png" alt="method" loading="lazy"></figure>
+<p>As can be seen in the figure, the whole model is divided into three parts.</p>
+<ol>
+<li>Bottom part: Visual Property Discoverer</li>
+<li>Medium part: Physics Interpreter</li>
+<li>Top part: Physical World Simulator</li>
+</ol>
+<h3 id="visual-property-discoverer">Visual Property Discoverer</h3>
+<p>In this part, they get some properties that can be directly calculated from videos. They first use KLT point tracker and a general background model to locate objects inside videos. They then have a LeNet on top of the patches and predict the material and volume of the projects.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[从win10开始配置ubuntu18.04双系统+pytorch-gpu深度学习环境]]></title>
+        <id>https://tonywangziteng.github.io/post/cong-win10-kai-shi-pei-zhi-ubuntu1804-shuang-xi-tong-pytorch-gpu-shen-du-xue-xi-huan-jing/</id>
+        <link href="https://tonywangziteng.github.io/post/cong-win10-kai-shi-pei-zhi-ubuntu1804-shuang-xi-tong-pytorch-gpu-shen-du-xue-xi-huan-jing/">
+        </link>
+        <updated>2020-09-29T10:08:21.000Z</updated>
+        <content type="html"><![CDATA[<p>Author: 王子腾<br>
+<strong>本文整理了从win10开始配置ubuntu18.04双系统，以及Anaconda+Pytorch-gpu环境。本着不重复造轮子的原则，仅引用梳理优秀的现有教程</strong></p>
+<h2 id="总体步骤">总体步骤</h2>
+<ol>
+<li>安装双系统</li>
+<li>更改显卡驱动</li>
+<li>安装anaconda</li>
+<li>安装pytorch</li>
+<li>安装vscode</li>
+</ol>
+<h2 id="安装双系统">安装双系统</h2>
+<p>本文作于2020.09，ubuntu最新版本为20.04，但是由于很多应用没有适配，更加推荐18.04版本。<br>
+推荐教程：</p>
+<p><a href="https://www.cnblogs.com/masbay/p/11627727.html">ubuntu18,04双系统安装教程</a></p>
+<p>需要注意的是，制作系统盘和安装过程，大同小异，但是U盘启动的步骤，不同品牌不同型号的电脑都有差异，请自行百度。</p>
+<h2 id="安装独立显卡驱动-和-cuda">安装独立显卡驱动 和 cuda</h2>
+<p>一般pytorch需要独立显卡加速，当然如果只安装cpu版本，就不用了。<br>
+选择18.04版本的原因，其中之一就是平台本身提供稳定的先打驱动，安装简单，具体安装步骤，请参考该知乎回答的第一种即可：<br>
+<a href="https://zhuanlan.zhihu.com/p/59618999">ubuntu18.04安装nvidia独立显卡驱动</a></p>
+<p>GPU加速还需要nvidia的cuda支持，可以直接从官网安装。目前推荐10.2版本，链接如下，安装直接跟着页面上的教程即可<br>
+<a href="https://developer.nvidia.com/cuda-10.2-download-archive?target_os=Linux&amp;target_arch=x86_64&amp;target_distro=Ubuntu">cuda10.2下载安装</a></p>
+<p>安装之后，在terminal中输入<code>nvidia-smi</code> 可以查看当前的显卡使用信息</p>
+<h2 id="安装anaconda和pytorch">安装anaconda和pytorch</h2>
+<p>anaconda是一个用来管理python环境和包的软件，可以创建彼此独立的虚拟环境，推荐安装。<br>
+安装根据下面的教程即可。推荐使用清华源，国内没有梯子的话直接下载速度可能会很慢。另外就是中间提示加入环境变量最好用yes<br>
+<a href="https://blog.csdn.net/qq_15192373/article/details/81091098">安装anaconda</a><br>
+安装完成之后，打开terminal应该在命令最前面出现<code>(base)</code>，说明安装成功。<br>
+然后推荐使用虚拟环境，命令为<code>conda create -n &lt;env_name&gt; python=&lt;python version&gt;</code>，例如<code>conda create -n torch_env python=3.7</code>，完成后<code>conda activate &lt;env_name&gt;</code> 激活环境。<br>
+具体conda的使用方法参见<a href="https://www.jianshu.com/p/eaee1fadc1e9">anaconda使用教程</a><br>
+激活环境后，即可按照pytorch官网中的命令安装pytorch. 相应链接为<a href="https://www.jianshu.com/p/eaee1fadc1e9">pytorch 安装</a>，推荐使用pip安装，不出意外命令应该是<code>pip install torch torchvision</code>。</p>
+<p>但是直接安装由于GFW的原因，很可能特别慢，可以更换使用清华源进行安装。<br>
+<a href="https://mirror.tuna.tsinghua.edu.cn/help/ubuntu/">清华源官方使用方法</a></p>
+<p>安装之后，在terminal中输入python，在交互环境中<code>import torch</code> ，不报错说明pytorch安装成功，再输入<code>torch.cuda.is_available()</code>，如果输出<code>True</code>说明可以使用gpu。</p>
+<h2 id="vscode">VSCODE</h2>
+<p>编辑器推荐使用vscode，只需要再<a href="https://code.visualstudio.com/">官网</a>中下载，然后安装python插件即可。激活python插件后，在左下角可以选择python interpretor，选择相应的虚拟环境，即可享受完整的代码补全等功能。</p>
+<p>运行代码推荐直接使用terminal运行。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[PBRNet：Progressive Boundary Refinement Network for Temporal Action Detection]]></title>
+        <id>https://tonywangziteng.github.io/post/pbrnet/</id>
+        <link href="https://tonywangziteng.github.io/post/pbrnet/">
+        </link>
+        <updated>2020-09-20T15:08:40.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="author">Author</h2>
+<p>Qinying Liu, Zilei Wang, 中科大 Department of Automation</p>
+<h2 id="主要特点">主要特点</h2>
+<ol>
+<li>One-stage, Anchor-Based</li>
+<li>Three cascaded modules to progressively fine-tune results</li>
+<li>利用UNet型网络，充分利用了frame-level的信息</li>
+</ol>
+<h2 id="pbrnet-具体结构以及tricks">PBRNet 具体结构以及tricks</h2>
+<p><img src="https://tonywangziteng.github.io/post-images/1600650150041.png" alt="pipeline" loading="lazy"><br>
+整个网络结构分为三个部分：</p>
+<ol>
+<li>CPD: Coarse Pyramidal Detection</li>
+<li>RPD: Refined Pyramidal Detection</li>
+<li>FGD:  Fine-grained Detection</li>
+</ol>
+<h3 id="cpd">CPD</h3>
+<p>利用FPN网络来提取不同感受野的特征，并且利用这些特征来对 preset anchors 进行第一步的调整。</p>
+<p>对于THUMOS14来讲，作者采用了五层，分别对应了（L/8, L/16, L/32, L/64, L/128）五个尺度的anchors。但是由于浅层网络缺少semantic的信息，而深层网络缺乏细节信息，因此这个过程中只能作为粗调使用。</p>
+<p>FPN的每一层都保持3*3的spatil dim，长度L减半。由feature map 到anchors调整的classification 和 loacation regression 信息是通过3*3*3的3D卷积实现的</p>
+<h3 id="rpd">RPD</h3>
+<p>从这个地方开始，作者开始了一系列骚操作。</p>
+<figure data-type="image" tabindex="1"><img src="https://tonywangziteng.github.io/post-images/1600651452793.png" alt="FBv1" loading="lazy"></figure>
+<p>这一部分是CPD的对偶的结构，利用步长为2的上采样不断恢复长度。同时将CPD中相应长度的 feature map 直接拉过来，通过上图中的FBv1中的结构进行融合。保证RPD中的细节信息足够。同时基于对偶的结构，直接将CPD中的 coarse proposals 拉到这里作为进一步调整的对象。</p>
+<p>这种UNet样式的结构在2019年的一篇文章中用过，作者生成他们利用这两个网络级联来 Progressive 的进行classification and location regression，是他们的创新点。</p>
+<h3 id="fgd">FGD</h3>
+<p>这里应该算是作者自己提出的最后进行 frame level fine tune 的网络。这里作者又进行了一波操作</p>
+<figure data-type="image" tabindex="2"><img src="https://tonywangziteng.github.io/post-images/1600652096594.png" alt="FBv2" loading="lazy"></figure>
+<p>通过上图中的FBv2模块，把RPD网络的最后一层输出和原视频序列直接融合在一起，形成了一个frame-level 的 feature map。</p>
+<p>在这个frame-level的feature map上，过3*3*3的3D卷积得到了actioness, start, end的三个打分结果。此处的每一个结果都是按照类别进行得，也就是有一个k维的维度，k是动作类别。根据文章中，这三个branch的作用是增加semantic信息，以及参与最后anchor的打分挑选。个人认为semantic信息那一条属实牵强。</p>
+<p>然后对于提出的proposal，首先分别定位到frame-level的feacure-map中，然后在开始和结束的位置分别取出t/<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span></span></span></span>的长度(t是proposal的时间，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span></span></span></span>在THUMOS14中是8)，进行时间维度空洞的三位卷积，进行最终的fine-tune。</p>
+<h3 id="details-and-tricks">Details and tricks</h3>
+<p>到这里整个网络的大体结构就说完了，剩下是一些细节上的操作和处理的方法。</p>
+<h4 id="预处理progressive-matching-strategy">预处理：Progressive Matching Strategy</h4>
+<p>在定义positive and negative sample的时候，最主要是通过IOU，当IOU超过一定threshold之后认为是正例。所有的positive sample中，认为得分最高的就是ground truth。这里使用了一个trick是对于CPD, FPD, FGD三个module，threshold分别是0.5, 0.6, 0.7，以此来保证他所谓的Progressive。</p>
+<h4 id="处理正负样本不均衡">处理正负样本不均衡</h4>
+<p>在前期的过程中会直接预测anchor是bachgroud的得分，只保留得分低的anchor。对于背景类，用难例挖掘。保留负样本中loss比较高的，应该是可以提供更多的信息。</p>
+<h4 id="类别得分">类别得分</h4>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>p</mi><mi>k</mi></msup><mo>=</mo><msubsup><mi>p</mi><mrow><mi>c</mi><mi>p</mi></mrow><mi>k</mi></msubsup><mo>⋅</mo><msubsup><mi>p</mi><mrow><mi>r</mi><mi>p</mi></mrow><mi>k</mi></msubsup><mo>⋅</mo><msubsup><mi>p</mi><mi>s</mi><mi>k</mi></msubsup><mo>⋅</mo><msubsup><mi>p</mi><mi>e</mi><mi>k</mi></msubsup></mrow><annotation encoding="application/x-tex">p^k=p^k_{cp}\cdot p^k_{rp}\cdot p^k_s\cdot p^k_e
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.093548em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.282216em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.899108em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">p</span></span></span></span><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.282216em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.899108em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">p</span></span></span></span><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.146108em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999998em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.146108em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999998em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">e</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p>作者声称这样可以结合anchor的类别信息和start, end的类别信息，更加准确</p>
+<h2 id="conclusion">conclusion</h2>
+<p>Unet的结构可以参考， 主要是这一片文章实现了one-stage的方法，其中的很多tricks是值得注意的，但是这篇文章仍然是anchor-based的，所以后续有往anchor-free 方向靠拢的可能性。</p>
+]]></content>
+    </entry>
+</feed>

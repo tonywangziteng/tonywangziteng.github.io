@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+     <meta charset="utf-8" />
+  <title>PBRNet：Progressive Boundary Refinement Network for Temporal Action Detection | Haymax Notebook</title>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+  <link rel="stylesheet" href="https://tonywangziteng.github.io/styles/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+   <script src="https://cdn.staticfile.org/highlight.js/9.15.9/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+ </head>
+ <body>
+     <div class="sidebar animated fadeInDown">
+   <div class="logo-title">
+    <div class="title">
+     <img src="https://tonywangziteng.github.io/images/avatar.png?v=1609249252263" style="width:127px;" />
+
+     <div class="description">
+      <p>温故而知新</p>
+     </div>
+    </div>
+   </div>
+   <ul class="social-links">
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+   </ul>
+   <div class="footer">
+    <div class="by_farbox">
+   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    
+
+    </div>
+   </div>
+  </div>
+  <div class="main">
+     <div class="page-top animated fadeInDown">
+    <div class="nav">
+    
+     <li><a  href="/">首页</a></li>
+
+     <li><a  href="/archives">归档</a></li>
+
+     <li><a  href="/tags">标签</a></li>
+
+     <li><a  href="/post/about">关于</a></li>
+
+    </div>
+    <div class="information">
+     <div class="back_btn">
+      <li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li>
+     </div>
+    </div>
+   </div>
+   <div class="autopagerize_page_element">
+    <div class="content">
+     <div class="post-page">
+      <div class="post animated fadeInDown">
+       <div class="post-title">
+        <h3><a>PBRNet：Progressive Boundary Refinement Network for Temporal Action Detection</a></h3>
+       </div>
+       <div class="post-content">
+        <h2 id="author">Author</h2>
+<p>Qinying Liu, Zilei Wang, 中科大 Department of Automation</p>
+<h2 id="主要特点">主要特点</h2>
+<ol>
+<li>One-stage, Anchor-Based</li>
+<li>Three cascaded modules to progressively fine-tune results</li>
+<li>利用UNet型网络，充分利用了frame-level的信息</li>
+</ol>
+<h2 id="pbrnet-具体结构以及tricks">PBRNet 具体结构以及tricks</h2>
+<p><img src="https://tonywangziteng.github.io/post-images/1600650150041.png" alt="pipeline" loading="lazy"><br>
+整个网络结构分为三个部分：</p>
+<ol>
+<li>CPD: Coarse Pyramidal Detection</li>
+<li>RPD: Refined Pyramidal Detection</li>
+<li>FGD:  Fine-grained Detection</li>
+</ol>
+<h3 id="cpd">CPD</h3>
+<p>利用FPN网络来提取不同感受野的特征，并且利用这些特征来对 preset anchors 进行第一步的调整。</p>
+<p>对于THUMOS14来讲，作者采用了五层，分别对应了（L/8, L/16, L/32, L/64, L/128）五个尺度的anchors。但是由于浅层网络缺少semantic的信息，而深层网络缺乏细节信息，因此这个过程中只能作为粗调使用。</p>
+<p>FPN的每一层都保持3*3的spatil dim，长度L减半。由feature map 到anchors调整的classification 和 loacation regression 信息是通过3*3*3的3D卷积实现的</p>
+<h3 id="rpd">RPD</h3>
+<p>从这个地方开始，作者开始了一系列骚操作。</p>
+<figure data-type="image" tabindex="1"><img src="https://tonywangziteng.github.io/post-images/1600651452793.png" alt="FBv1" loading="lazy"></figure>
+<p>这一部分是CPD的对偶的结构，利用步长为2的上采样不断恢复长度。同时将CPD中相应长度的 feature map 直接拉过来，通过上图中的FBv1中的结构进行融合。保证RPD中的细节信息足够。同时基于对偶的结构，直接将CPD中的 coarse proposals 拉到这里作为进一步调整的对象。</p>
+<p>这种UNet样式的结构在2019年的一篇文章中用过，作者生成他们利用这两个网络级联来 Progressive 的进行classification and location regression，是他们的创新点。</p>
+<h3 id="fgd">FGD</h3>
+<p>这里应该算是作者自己提出的最后进行 frame level fine tune 的网络。这里作者又进行了一波操作</p>
+<figure data-type="image" tabindex="2"><img src="https://tonywangziteng.github.io/post-images/1600652096594.png" alt="FBv2" loading="lazy"></figure>
+<p>通过上图中的FBv2模块，把RPD网络的最后一层输出和原视频序列直接融合在一起，形成了一个frame-level 的 feature map。</p>
+<p>在这个frame-level的feature map上，过3*3*3的3D卷积得到了actioness, start, end的三个打分结果。此处的每一个结果都是按照类别进行得，也就是有一个k维的维度，k是动作类别。根据文章中，这三个branch的作用是增加semantic信息，以及参与最后anchor的打分挑选。个人认为semantic信息那一条属实牵强。</p>
+<p>然后对于提出的proposal，首先分别定位到frame-level的feacure-map中，然后在开始和结束的位置分别取出t/<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span></span></span></span>的长度(t是proposal的时间，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span></span></span></span>在THUMOS14中是8)，进行时间维度空洞的三位卷积，进行最终的fine-tune。</p>
+<h3 id="details-and-tricks">Details and tricks</h3>
+<p>到这里整个网络的大体结构就说完了，剩下是一些细节上的操作和处理的方法。</p>
+<h4 id="预处理progressive-matching-strategy">预处理：Progressive Matching Strategy</h4>
+<p>在定义positive and negative sample的时候，最主要是通过IOU，当IOU超过一定threshold之后认为是正例。所有的positive sample中，认为得分最高的就是ground truth。这里使用了一个trick是对于CPD, FPD, FGD三个module，threshold分别是0.5, 0.6, 0.7，以此来保证他所谓的Progressive。</p>
+<h4 id="处理正负样本不均衡">处理正负样本不均衡</h4>
+<p>在前期的过程中会直接预测anchor是bachgroud的得分，只保留得分低的anchor。对于背景类，用难例挖掘。保留负样本中loss比较高的，应该是可以提供更多的信息。</p>
+<h4 id="类别得分">类别得分</h4>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>p</mi><mi>k</mi></msup><mo>=</mo><msubsup><mi>p</mi><mrow><mi>c</mi><mi>p</mi></mrow><mi>k</mi></msubsup><mo>⋅</mo><msubsup><mi>p</mi><mrow><mi>r</mi><mi>p</mi></mrow><mi>k</mi></msubsup><mo>⋅</mo><msubsup><mi>p</mi><mi>s</mi><mi>k</mi></msubsup><mo>⋅</mo><msubsup><mi>p</mi><mi>e</mi><mi>k</mi></msubsup></mrow><annotation encoding="application/x-tex">p^k=p^k_{cp}\cdot p^k_{rp}\cdot p^k_s\cdot p^k_e
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.093548em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.282216em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.899108em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">p</span></span></span></span><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.282216em;vertical-align:-0.383108em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.899108em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">p</span></span></span></span><span style="top:-3.1130000000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.383108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.146108em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999998em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.146108em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999998em;"><span style="top:-2.4530000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">e</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p>作者声称这样可以结合anchor的类别信息和start, end的类别信息，更加准确</p>
+<h2 id="conclusion">conclusion</h2>
+<p>Unet的结构可以参考， 主要是这一片文章实现了one-stage的方法，其中的很多tricks是值得注意的，但是这篇文章仍然是anchor-based的，所以后续有往anchor-free 方向靠拢的可能性。</p>
+
+       </div>
+       <div class="post-footer">
+        <div class="meta">
+         <div class="info">
+          <i class="fa fa-sun-o"></i>
+          <span class="date">2020-09-20</span>
+          <i class="fa fa-tag"></i>
+          
+          <a class="tag" href="https://tonywangziteng.github.io/tag/dHDYhQvFG/" title="TAD">TAD </a>
+          
+          <a class="tag" href="https://tonywangziteng.github.io/tag/OBw-_HguFi/" title="AIML">AIML </a>
+          
+          <a class="tag" href="https://tonywangziteng.github.io/tag/jiuvsblRB/" title="paper reading">paper reading </a>
+          
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="share">
+       <div class="evernote">
+        <a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a>
+       </div>
+       <div class="weibo">
+        <a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a>
+       </div>
+       <div class="twitter">
+        <a class="fa fa-twitter" href="http://twitter.com/home?status=,https://tonywangziteng.github.io/post/pbrnet/,;"></a>
+       </div>
+      </div>
+      <div class="pagination">
+       <ul class="clearfix">
+
+        <li class="pre pagbuttons"><a class="btn" role="navigation" href="https://tonywangziteng.github.io/post/cong-win10-kai-shi-pei-zhi-ubuntu1804-shuang-xi-tong-pytorch-gpu-shen-du-xue-xi-huan-jing/" title="从win10开始配置ubuntu18.04双系统+pytorch-gpu深度学习环境">上一篇</a></li>
+         
+        
+       </ul>
+      </div>
+        
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery.js"></script>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery-migrate-1.2.1.min.js"></script>
+  <script src="https://tonywangziteng.github.io/media/scripts/jquery.appear.js"></script>
+
+
+ </body>
+</html>
